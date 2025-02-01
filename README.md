@@ -8,7 +8,6 @@
 ![Screenshot 2025-02-01 112723](https://github.com/user-attachments/assets/0ffc3430-83c7-43a2-9e99-aae362df5c86)
 ![Screenshot 2025-02-01 112746](https://github.com/user-attachments/assets/47988c7d-8089-4c1f-bc7e-05b13c7ae475)
 
-
 ### Technologies Used
 1. Back-end: Node.js, Express.js
 1. Front-end: React.js, Tailwind CSS
@@ -16,13 +15,37 @@
 1. Authentication: JWT (JSON Web Tokens)
 1. Other Libraries and Tools: Axios, React Router, Chart.js, Socket.io, bcrypt (for password hashing), etc.
 
-### Install packages
+## :hammer_and_wrench: how to run
+### Prerequisites
+1. **Node version 18.x.x**
+1. **generate JWT secret key**
+1. **setup MongoDB**
 
+### Cloning the repository
 ```shell
+git clone https://github.com/Vishal101022/Poll-sys.git
+```
+### Setup .env file
+```js
+MONGODB_URI= (required)
+PORT=5000
+JWT_SECRET= (required)
+FRONTEND_URL=http://frontend.url
+
+CRYPTO_KEY=crypto_key    (not required)
+SESSION_SECRET=session_secret    (not required)
+```
+### Install packages
+```shell
+cd backend
+npm i
+
+cd frontend
 npm i
 ```
 ### Start the app
 
 ```shell
- 
+ backend - npm run dev
+ frontend - npm start
 ```
