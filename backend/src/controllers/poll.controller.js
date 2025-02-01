@@ -159,8 +159,6 @@ async function submitPoll(req) {
       poll: poll._id,
       ipAddress: req.body.ip,
       optionId: optionId,
-      country: req.body.geo_location.country,
-      geo_location: req.body.geo_location,
     }).save();
 
     const result = await getResult(pollId);
