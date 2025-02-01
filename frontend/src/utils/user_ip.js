@@ -12,13 +12,8 @@ export const getUserIp = async () => {
     // load the user ip
     let res = await fetch("https://ipv4.jsonip.com/");
     res = await res.json();
-    let geoLocation = await fetch(`http://ip-api.com/json/${res.ip}`);
-    geoLocation = await geoLocation.json();
-
     let details = {
       ip: res.ip,
-      country: res.country,
-      geo_location: geoLocation,
     };
 
     // set cookie for 1 day
@@ -26,8 +21,6 @@ export const getUserIp = async () => {
 
     return {
       ip: res.ip,
-      country: res.country,
-      geo_location: geoLocation,
     };
   } catch (error) {
     console.log(error);

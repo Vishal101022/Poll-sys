@@ -1,4 +1,4 @@
-const { isEmpty, isEmail } = require("../helpers/common");
+const { isEmpty, } = require("../helpers/common");
 
 const createPollValidation = (payload) => {
   try {

@@ -28,6 +28,7 @@ const createPoll = async (data) => {
 
 const submitPoll = async (pollId, data) => {
   try {
+    console.log(pollId, data);
     let res = await api.post(`/polls/submit/${pollId}`, data);
     return res.data;
   } catch (error) {
