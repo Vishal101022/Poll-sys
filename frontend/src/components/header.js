@@ -14,7 +14,6 @@ const Header = ({ isAuth, auth }) => {
 
   const [mobileMenuHidden, setMobileMenuHidden] = useState(false);
 
-  const url = window.location.pathname;
 
   return (
     <div className="bg-gray-50 sticky top-0 z-40  border-b border-slate-600">
@@ -23,7 +22,7 @@ const Header = ({ isAuth, auth }) => {
           className="text-3xl text-black font-bold leading-none"
           to="/"
         >
-          Poll-sys
+          Poll-sys dfsfsdf
         </Link>
         <div
           className="lg:hidden"
