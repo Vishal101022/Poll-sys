@@ -22,7 +22,7 @@ const Header = ({ isAuth, auth }) => {
           className="text-3xl text-black font-bold leading-none"
           to="/"
         >
-          Poll-sys dfsfsdf
+          Poll-sys
         </Link>
         <div
           className="lg:hidden"
