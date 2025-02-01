@@ -1,9 +1,5 @@
 import CreatorSidebar from "../../components/admin/sidebar";
-import CreatorHeader from "../../components/admin/header";
-import CreatorFooter from "../../components/admin/footer";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Dashboard from "./dashboard";
-
 import CreatorList from "./creators/list.js";
 
 import CreateAccessToken from "./tokens/create.js";
@@ -32,10 +28,9 @@ const CreatorLayout = () => {
         {/* <!-- ./Sidebar --> */}
 
         <div className="h-full ml-14 md:ml-64">
-          <CreatorHeader />
+          
           <div className="px-4 py-8 md:px-8">
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
 
               {/* /creators */}
               <Route path="/creators/list" element={<CreatorList />} />
@@ -68,7 +63,6 @@ const CreatorLayout = () => {
               <Route path="*" element={<Navigate to={"/404"} />} />
             </Routes>
           </div>
-          <CreatorFooter />
         </div>
       </div>
     </div>
