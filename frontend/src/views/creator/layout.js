@@ -12,8 +12,7 @@ import CommentByPoll from "./comments/list-by-poll.js";
 import CreateTheme from "./themes/create";
 import Activity from "./activity";
 import Account from "./settings/account";
-import CreatorFeedback from "./settings/feedback";
-import CreatorFAQs from "./settings/faq";
+
 
 const CreatorLayout = () => {
   return (
@@ -43,8 +42,6 @@ const CreatorLayout = () => {
               <Route path="/themes/create" element={<CreateTheme />} />
               <Route path="/activity" element={<Activity />} />
               <Route path="/settings/account" element={<Account />} />
-              <Route path="/settings/feedback" element={<CreatorFeedback />} />
-              <Route path="/settings/faqs" element={<CreatorFAQs />} />
               <Route
                 path="*"
                 element={<Navigate to={"/creator/dashboard"} />}
