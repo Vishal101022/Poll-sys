@@ -233,7 +233,6 @@ async function submitPoll(req) {
       poll: poll._id,
       ipAddress: req.body.ip,
       optionId: optionId,
-      country: req.body.country,
     }).save();
 
     return poll;
