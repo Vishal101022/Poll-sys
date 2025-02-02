@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { handleControllerError } = require("../../utils/helpers");
 const PollCreator = require("../models/creator.model");
+const User = require("../models/creator.model");
 const uuid = require("uuid");
 
 const env = require("../../config/env");
@@ -24,12 +25,12 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-
 // Module Exports
 module.exports = {
   register,
   verifyToken,
   login,
+  uploadProfilePicture,
 };
 
 /**
@@ -131,3 +132,26 @@ async function login(req) {
     throw handleControllerError(e);
   }
 }
+
+// Route to handle profile picture upload
+async function uploadProfilePicture(req, res) {
+  try {
+    if (!req.file) {
+      throw new Error("No file uploaded");
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    user.profilePicture = req.file.path;
+    await user.save();
+
+    return { profilePicture: req.file.path }; 
+  } catch (e) {
+    console.error("Error uploading profile picture:", e);
+    throw e; 
+  }
+}
+
