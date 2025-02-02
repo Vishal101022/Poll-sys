@@ -55,6 +55,7 @@ async function addFAQ(req, res, next) {
 
 /**
  * @description get poll
+ * 
  */
 async function getAllFAQs(req, res, next) {
   try {
