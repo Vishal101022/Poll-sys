@@ -4,6 +4,7 @@ import { getCreatorById } from "../../../services/admin/user.service.js";
 import { getUserDetails } from "../../../helpers/localstorage.js";
 import { uploadProfile } from "../../../services/admin/user.service.js";
 import { successToast, errorToast } from "../../../utils/toaster.js";
+import { setLocalStorage } from "../../../helpers/localstorage.js";
 
 const Account = () => {
   const [user, setUser] = useState("");
@@ -18,6 +19,8 @@ const Account = () => {
         profilePicture: `http://localhost:5000/${response.data[0].profilePicture}`,
         totalPollsCreated: response.data[0].totalPollsCreated,
       });
+
+      setLocalStorage("imgURL", response.data[0].profilePicture);
     });
   }, []);
 
@@ -59,8 +62,10 @@ const Account = () => {
                   <div className="mr-4">
                     <img
                       className="rounded-full w-20 h-20 object-cover border-2 border-sky-500 mb-3"
-                      src={ user.profilePicture ||
-                        "https://preview.cruip.com/mosaic/images/user-avatar-80.png"
+                      src={
+                        user.profilePicture
+                          ? user.profilePicture
+                          : "https://preview.cruip.com/mosaic/images/user-avatar-80.png"
                       }
                       width="80"
                       height="80"
