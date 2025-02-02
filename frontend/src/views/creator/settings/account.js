@@ -1,7 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CreatorPageTitle from "../../../components/creator/page_title";
+import { getCreatorById } from "../../../services/admin/user.service.js";
+import { getUserDetails } from "../../../helpers/localstorage.js";
+import { uploadProfile } from "../../../services/admin/user.service.js";
+import { successToast, errorToast } from "../../../utils/toaster.js";
 
 const Account = () => {
+  const [user, setUser] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  useEffect(() => {
+    const userId = getUserDetails().id;
+    getCreatorById(userId).then((response) => {
+      setUser({
+        name: response.data[0].name,
+        email: response.data[0].email,
+        profilePicture: `http://localhost:5000/${response.data[0].profilePicture}`,
+        totalPollsCreated: response.data[0].totalPollsCreated,
+      });
+    });
+  }, []);
+
+  const handleFileChange = (event) => {
+    if (event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("profile_picture", selectedFile);
+    formData.append("profile_picture", getUserDetails().id);
+
+    try {
+      await uploadProfile(formData);
+      window.location.reload();
+      successToast("Profile picture uploaded successfully");
+    } catch (error) {
+      errorToast(error?.message || error);
+    }
+  };
+
   return (
     <>
       <div className="mt-4 mx-4">
@@ -15,133 +55,67 @@ const Account = () => {
             {/* <!-- Picture --> */}
             <section className="mt-6">
               <div className="flex items-center">
-                <div className="mr-4">
-                  <img
-                    className="rounded-full cea2a ckssj"
-                    src="https://preview.cruip.com/mosaic/images/user-avatar-80.png"
-                    width="80"
-                    height="80"
-                    alt="User upload"
+                <form>
+                  <div className="mr-4">
+                    <img
+                      className="rounded-full w-20 h-20 object-cover border-2 border-sky-500 mb-3"
+                      src={ user.profilePicture ||
+                        "https://preview.cruip.com/mosaic/images/user-avatar-80.png"
+                      }
+                      width="80"
+                      height="80"
+                      alt="User img"
+                    />
+                  </div>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="profilePictureUpload"
                   />
-                </div>
-                <button className="bg-[#6366f1] px-2 py-1 rounded">Change</button>
+                  <label
+                    htmlFor="profilePictureUpload"
+                    className="bg-[#6366f1] px-2 py-1 rounded cursor-pointer"
+                  >
+                    Change
+                  </label>
+                  <button
+                    onClick={handleFileUpload}
+                    className="bg-[#6366f1] px-2 py-1 rounded ml-2 cursor-pointer"
+                  >
+                    Upload
+                  </button>
+                </form>
               </div>
             </section>
-
-            {/* <!-- Business Profile --> */}
+            {/* <!-- Username --> */}
             <section className="mt-6">
               <h3 className="text-slate-800 dark:text-slate-100 font-bold text-2xl">
-                Business Profile
+                Name
               </h3>
-              <div className="text-base text-blue-100 my-2">
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit.
-              </div>
-              <div className="flex flex-col gap-4 md:flex-row xl:flex-row mt-6">
-                <div className="w-full md:w-1/3 xl:w-1/3">
-                  <label className="block text-base text-gray-200" htmlFor="name">
-                    Business Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter your question"
-                    className={`w-full rounded border border-gray-700 bg-slate-900 mt-2 py-2 px-5 font-normal outline-none 
-                          transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter 
-                          dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                    value="Acme Inc."
-                  />
-                </div>
-                <div className="w-full md:w-1/3 xl:w-1/3">
-                  <label
-                    className="block text-base text-gray-200"
-                    htmlFor="business-id"
-                  >
-                    Business Id
-                  </label>
-                  <input
-                    type="text"
-                    id="business-id"
-                    placeholder="Enter your question"
-                    className={`w-full rounded border border-gray-700 bg-slate-900 mt-2 py-2 px-5 font-normal outline-none 
-                          transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter 
-                          dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                    value="habkh-akdjf"
-                  />
-                </div>
-                <div className="w-full md:w-1/3 xl:w-1/3">
-                  <label className="block text-base text-gray-200" htmlFor="name">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter your question"
-                    className={`w-full rounded border border-gray-700 bg-slate-900 mt-2 py-2 px-5 font-normal outline-none 
-                          transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter 
-                          dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                    value="Acme Inc."
-                  />
-                </div>
-              </div>
+              <p className="mt-2 text-slate-600 dark:text-slate-400">
+                {user.name}
+              </p>
             </section>
-
             {/* <!-- Email --> */}
             <section className="mt-6">
               <h3 className="text-slate-800 dark:text-slate-100 font-bold text-2xl">
                 Email
               </h3>
-              <div className="text-base text-blue-100 my-2">
-                Excepteur sint occaecat cupidatat non proident sunt in culpa qui
-                officia.
-              </div>
-              <div className="flex flex-wrap">
-                <div className="mr-2">
-                  <label className="sr-only" htmlFor="email">
-                    Business email
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter your question"
-                    className={`w-full rounded border border-gray-700 bg-slate-900 mt-2 py-2 px-5 font-normal outline-none 
-                          transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter 
-                          dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                    value="creator@pollsage.in"
-                  />
-                </div>
-                <button className="mt-2 py-2 px-3 border border-slate-200 dark:border-slate-700 text-indigo-500 rounded">
-                  Change
-                </button>
-              </div>
+              <p className="mt-2 text-slate-600 dark:text-slate-400">
+                {user.email}
+              </p>
             </section>
-
-            {/* <!-- Password --> */}
+            {/* <!-- total poll created --> */}
             <section className="mt-6">
               <h3 className="text-slate-800 dark:text-slate-100 font-bold text-2xl">
-                Password
+                Total Polls Created
               </h3>
-              <div className="text-base text-blue-100 my-2">
-                You can set a permanent password if you don't want to use
-                temporary login codes.
-              </div>
-              <div className="mt-5">
-                <button className="mt-2 py-2 px-3 border border-slate-200 dark:border-slate-700 text-indigo-500 rounded">
-                  Set New Password
-                </button>
-              </div>
+              <p className="mt-2 text-slate-600 dark:text-slate-400">
+                {user.totalPollsCreated}
+              </p>
             </section>
           </div>
-          <footer>
-            <div className="flex flex-col border-slate-200 dark:border-slate-700 py-5 px-6 border-t">
-              <div className="flex self-end">
-                <button className="border px-3 py-2 rounded dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                  Cancel
-                </button>
-                <button className="ml-3 px-3 py-2 rounded bg-indigo-500 hover:bg-indigo-600">Save Changes</button>
-              </div>
-            </div>
-          </footer>
         </div>
       </div>
     </>
