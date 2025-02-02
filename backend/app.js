@@ -12,7 +12,7 @@ const session = require("express-session");
 const cors = require("cors");
 const passport = require('./config/passport.js');
 const setSecurityHeaders = require("./src/middleware/security-headers.js");
-
+const path = require("path");
 // Create the Express app
 const app = express();
 
@@ -22,15 +22,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files from the "uploads" directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 const corsOptions = {
   origin: ["http://localhost:3000", "http://localhost:5000", "https://ipv4.jsonip.com/"],
   credentials: true,
   method: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "X-HTTP-Method-Override"],
 };
 
 // CORS middleware
 app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true }));
 
 // Security headers middleware
 app.use(setSecurityHeaders);
