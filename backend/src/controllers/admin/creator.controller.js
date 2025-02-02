@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
-const {
-  handleControllerError,
-} = require("../../../utils/helpers");
+const { handleControllerError } = require("../../../utils/helpers");
 const Creator = require("../../models/creator.model");
-const bcrypt = require("bcryptjs");
 
 // Module Exports
 module.exports = {
-  addFaqs, getAllCreators, getFAQByTag, getFAQById
+  addFaqs,
+  getAllCreators,
+  getCreatorById,
+  getFAQByTag,
+  getFAQById,
 };
 
 /**
@@ -50,6 +51,8 @@ async function getAllCreators(req) {
           name: 1,
           email: 1,
           createdPolls: 1,
+          totalPollsCreated: 1,
+          profilePicture: 1,
           createdTemplates: 1,
           isVerified: 1,
           createdAt: 1,
@@ -58,11 +61,11 @@ async function getAllCreators(req) {
         },
       },
     ]);
-    
+
     const totalDocs = await Creator.countDocuments({}); // Get the total count of FAQs
-    
+
     const totalPages = Math.ceil(totalDocs / limit);
-    
+
     const pagination = {
       itemCount: totalDocs,
       docs: docs,
@@ -73,8 +76,39 @@ async function getAllCreators(req) {
       pageCount: totalPages,
       slNo: (page - 1) * limit + 1,
     };
-    
+
     return pagination;
+  } catch (e) {
+    throw handleControllerError(e);
+  }
+}
+
+// get creator by its id
+async function getCreatorById(req) {
+  try {
+    const { id } = req.params;
+    let res = await Creator.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) },
+      },
+      {
+        $project: {
+          _id: 1, // Include other fields you want to keep
+          name: 1,
+          email: 1,
+          createdPolls: 1,
+          totalPollsCreated: 1,
+          profilePicture: 1,
+          createdTemplates: 1,
+          isVerified: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          // Exclude the password field
+        },
+      },
+    ]);
+
+    return res;
   } catch (e) {
     throw handleControllerError(e);
   }
@@ -85,7 +119,6 @@ async function getAllCreators(req) {
  */
 async function getFAQById(req) {
   try {
-    
     // sanity check
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       throw Error("Invalid id");
@@ -93,11 +126,9 @@ async function getFAQById(req) {
 
     const id = new mongoose.Types.ObjectId(req.params.id);
 
-
     const faq = await FAQ.findById(id);
 
     return faq;
-
   } catch (e) {
     throw handleControllerError(e);
   }
@@ -117,5 +148,3 @@ async function getFAQByTag(req) {
     throw handleControllerError(e);
   }
 }
-
-
