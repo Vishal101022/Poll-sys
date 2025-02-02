@@ -5,6 +5,8 @@ combined.log
 
 .env
 
+/uploads
+
 config/admin-data.js
 
 logs
