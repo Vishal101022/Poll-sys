@@ -92,6 +92,6 @@ export const setLocalStorage = (key, value) => {
   return true;
 }
 export const getLocalStorage = (key) => {
-  return localStorage.getItem(key);
-}
-
+  const value = localStorage.getItem(key);
+  return value ? value : null;
+};
