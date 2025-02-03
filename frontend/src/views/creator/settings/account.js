@@ -7,22 +7,39 @@ import { successToast, errorToast } from "../../../utils/toaster.js";
 import { setLocalStorage } from "../../../helpers/localstorage.js";
 
 const Account = () => {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    profilePicture: "https://randomuser.me/api/portraits/lego/4.jpg",
+    totalPollsCreated: 0,
+  });
   const [selectedFile, setSelectedFile] = useState(null);
 
-  useEffect(() => {
-    const userId = getUserDetails().id;
-    getCreatorById(userId).then((response) => {
-      setUser({
-        name: response.data[0].name,
-        email: response.data[0].email,
-        profilePicture: `http://localhost:5000/${response.data[0].profilePicture}`,
-        totalPollsCreated: response.data[0].totalPollsCreated,
-      });
+useEffect(() => {
+  const userId = getUserDetails().id;
+  getCreatorById(userId).then((response) => {
+    const profilePicture = response.data[0].profilePicture;
+   
+    const convertedValue = profilePicture === "null" ? null : profilePicture;
 
-      setLocalStorage("imgURL", response.data[0].profilePicture);
+    const profilePictureUrl = convertedValue
+      ? `http://localhost:5000/${profilePicture}`
+      : "https://randomuser.me/api/portraits/lego/4.jpg"; 
+
+    setUser({
+      name: response.data[0].name,
+      email: response.data[0].email,
+      profilePicture: profilePictureUrl, 
+      totalPollsCreated: response.data[0].totalPollsCreated,
     });
-  }, []);
+
+    
+    if (profilePicture) {
+      setLocalStorage("imgURL", profilePicture);
+    }
+  });
+}, [user]);
+  console.log("uerProfile", user.profilePicture);
 
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
@@ -38,8 +55,8 @@ const Account = () => {
 
     try {
       await uploadProfile(formData);
-      window.location.reload();
       successToast("Profile picture uploaded successfully");
+      window.location.reload();
     } catch (error) {
       errorToast(error?.message || error);
     }
@@ -62,11 +79,7 @@ const Account = () => {
                   <div className="mr-4">
                     <img
                       className="rounded-full w-20 h-20 object-cover border-2 border-sky-500 mb-3"
-                      src={
-                        user.profilePicture
-                          ? user.profilePicture
-                          : "https://preview.cruip.com/mosaic/images/user-avatar-80.png"
-                      }
+                      src={user.profilePicture}
                       width="80"
                       height="80"
                       alt="User img"
